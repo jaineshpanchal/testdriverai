@@ -1,0 +1,50 @@
+name: Cart smoke test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - 'tests/cart-smoke.test.mjs'
+      - '.github/workflows/cart-smoke.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'tests/cart-smoke.test.mjs'
+      - '.github/workflows/cart-smoke.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Authenticate to TestDriver
+        uses: testdriverai/action@stable
+        with:
+          channel: stable
+          api-key: ${{ secrets.TD_API_KEY }}
+
+      - name: Run cart smoke test
+        run: npx vitest run tests/cart-smoke.test.mjs
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cart-smoke-results
+          path: test-results/
+          retention-days: 30
