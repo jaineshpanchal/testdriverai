@@ -5,13 +5,13 @@ on:
   push:
     branches: [main, master]
     paths:
-      - 'tests/cart-smoke.test.mjs'
-      - '.github/workflows/cart-smoke.yml'
+      - "tests/cart-smoke.test.mjs"
+      - ".github/workflows/cart-smoke.yml"
   pull_request:
     branches: [main, master]
     paths:
-      - 'tests/cart-smoke.test.mjs'
-      - '.github/workflows/cart-smoke.yml'
+      - "tests/cart-smoke.test.mjs"
+      - ".github/workflows/cart-smoke.yml"
 
 jobs:
   smoke:
@@ -26,8 +26,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
